@@ -1,0 +1,57 @@
+{% comment %}
+Copyright 2019 Fabian Wenzelmann
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+{% endcomment %}
+
+<script>
+    var form_field = "{{ widget.attrs.id|escapejs }}";
+    var error_div = "{{ widget.err_id|escapejs }}";
+    var min_value = {{ widget.attrs.min }};
+    var max_value = {{ widget.attrs.max }};
+    var error_text_format = "{{ widget.error_text_format|escapejs }}";
+    var required_text = "{{ widget.required_text|escapejs }}";
+    var required = false;
+    {% if widget.required %}
+        required = true;
+    {% endif %}
+    var stars = [];
+    var on_selected = "{{ widget.on_selected }}";
+    {% autoescape off %}
+        var filled_html = "{{ widget.filled_style|escapejs }}";
+        var empty_html = "{{ widget.empty_style|escapejs }}";
+        var empty_value_html = "{{ widget.empty_value_style|escapejs }}";
+        var error_value_html = "{{ widget.error_style|escapejs }}";
+        var display_error = false;
+        {% if widget.errors %}
+            display_error = true;
+        {% endif %}
+    {% endautoescape %}
+    {% for star in widget.stars %}
+        stars.push("{{ star|escapejs }}");
+    {% endfor %}
+    var group = new StarGroup(form_field,error_div, stars, filled_html, empty_html,
+        empty_value_html, error_value_html, error_text_format, required_text, required,
+        min_value, max_value, on_selected, display_error);
+    register_star_group(group);
+
+    {% if widget.render_clear %}
+        var clear_id = "{{ widget.clear_id|escapejs }}";
+        register_clear(clear_id, group);
+    {% endif %}
+
+    {% if widget.submit_button %}
+        var submit = "{{ widget.submit_button|escapejs }}";
+        register_submit(submit);
+    {% endif %}
+</script>
